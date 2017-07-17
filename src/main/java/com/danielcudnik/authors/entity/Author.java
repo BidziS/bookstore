@@ -2,6 +2,7 @@ package com.danielcudnik.authors.entity;
 
 import com.danielcudnik.base.entity.Base;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -14,7 +15,10 @@ import javax.persistence.Table;
 @SequenceGenerator(allocationSize = 1, name = "SEQ", sequenceName = "GEN_AUTHOR_ID")
 public class Author extends Base {
 
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
 
     public Author() {

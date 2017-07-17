@@ -10,6 +10,7 @@ import java.util.Date;
 public class AuthorDTO extends BaseDTO {
 
     private String firstName;
+
     private String lastName;
 
     public AuthorDTO() {
