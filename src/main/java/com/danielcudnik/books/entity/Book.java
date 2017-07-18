@@ -36,6 +36,12 @@ public class Book extends Base{
     public Book() {
     }
 
+    public Book(String title, Date realaseDate, double price) {
+        this.title = title;
+        this.realaseDate = realaseDate;
+        this.price = price;
+    }
+
     public String getTitle() {
         return title;
     }

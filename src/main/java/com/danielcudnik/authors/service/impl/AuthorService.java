@@ -5,8 +5,8 @@ import com.danielcudnik.authors.dto.AuthorDTO;
 import com.danielcudnik.authors.entity.Author;
 import com.danielcudnik.authors.repository.IAuthorRepository;
 import com.danielcudnik.authors.service.IAuthorService;
-import com.danielcudnik.publishinghouse.dto.PublishingHouseDTO;
-import com.danielcudnik.publishinghouse.entity.PublishingHouse;
+import com.danielcudnik.books.entity.Book;
+import com.danielcudnik.books.repository.IBookRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,11 +26,13 @@ import java.util.List;
 public class AuthorService implements IAuthorService {
 
     private IAuthorRepository authorRepository;
+    private IBookRepository bookRepository;
     private ModelMapper modelMapper;
 
     @Autowired
-    public AuthorService(IAuthorRepository authorRepository, ModelMapper modelMapper) {
+    public AuthorService(IAuthorRepository authorRepository, IBookRepository bookRepository, ModelMapper modelMapper) {
         this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -49,8 +51,8 @@ public class AuthorService implements IAuthorService {
 
     @Override
     public List<AuthorDTO> getAllAuthors() {
-        Type authorListType = new TypeToken<List<AuthorDTO>>() {}.getType();
-        return modelMapper.map(authorRepository.findAll(), authorListType);
+        Type authorsListType = new TypeToken<List<AuthorDTO>>() {}.getType();
+        return modelMapper.map(authorRepository.findAll(), authorsListType);
     }
 
     @Override
@@ -61,7 +63,14 @@ public class AuthorService implements IAuthorService {
     @Override
     public void deleteAuthor(Long id) throws MyServerException {
         Author author = authorRepository.findOne(id);
-        if(author == null) throw new MyServerException("Publishing house with this id not exists", HttpStatus.NOT_FOUND);
+        if(author == null) throw new MyServerException("Author with this id not exists", HttpStatus.NOT_FOUND);
+
+        List<Book> authorBooks = bookRepository.findBooksByAuthorId(id);
+
+        if(authorBooks.size() != 0){
+            throw new MyServerException("You can not delete this author because he has a books assigned to him!", HttpStatus.NOT_ACCEPTABLE);
+        }
         authorRepository.delete(id);
+
     }
 }

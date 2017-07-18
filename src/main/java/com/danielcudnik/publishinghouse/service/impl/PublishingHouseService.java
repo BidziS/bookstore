@@ -1,6 +1,8 @@
 package com.danielcudnik.publishinghouse.service.impl;
 
 import com.danielcudnik.MyServerException;
+import com.danielcudnik.books.entity.Book;
+import com.danielcudnik.books.repository.IBookRepository;
 import com.danielcudnik.publishinghouse.dto.PublishingHouseDTO;
 import com.danielcudnik.publishinghouse.entity.PublishingHouse;
 import com.danielcudnik.publishinghouse.repository.IPublishingHouseRepository;
@@ -24,11 +26,13 @@ import java.util.List;
 public class PublishingHouseService implements IPublishingHouseService {
 
     private IPublishingHouseRepository publishingHouseRepository;
+    private IBookRepository bookRepository;
     private ModelMapper modelMapper;
 
     @Autowired
-    public PublishingHouseService(IPublishingHouseRepository publishingHouseRepository, ModelMapper modelMapper) {
+    public PublishingHouseService(IPublishingHouseRepository publishingHouseRepository, IBookRepository bookRepository, ModelMapper modelMapper) {
         this.publishingHouseRepository = publishingHouseRepository;
+        this.bookRepository = bookRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -48,8 +52,8 @@ public class PublishingHouseService implements IPublishingHouseService {
     //READ
     @Override
     public List<PublishingHouseDTO> getAllPublishingHouses() {
-        Type publishingHouseListType = new TypeToken<List<PublishingHouseDTO>>() {}.getType();
-        return modelMapper.map(publishingHouseRepository.findAll(), publishingHouseListType);
+        Type publishingHousesListType = new TypeToken<List<PublishingHouseDTO>>() {}.getType();
+        return modelMapper.map(publishingHouseRepository.findAll(), publishingHousesListType);
     }
 
     @Override
@@ -64,6 +68,13 @@ public class PublishingHouseService implements IPublishingHouseService {
     public void deletePublishingHouse(Long id) throws MyServerException {
         PublishingHouse publishingHouse = publishingHouseRepository.findOne(id);
         if(publishingHouse == null) throw new MyServerException("Publishing house with this id not exists", HttpStatus.NOT_FOUND);
+
+        List<Book> publishingHouseBooks = bookRepository.findBooksByPublishingHouseId(id);
+
+        if(publishingHouseBooks.size() != 0){
+            throw new MyServerException("You can not delete this publishing house because it has a issued books!", HttpStatus.NOT_ACCEPTABLE);
+        }
+
         publishingHouseRepository.delete(id);
     }
 }

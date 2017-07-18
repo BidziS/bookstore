@@ -7,9 +7,9 @@ import com.danielcudnik.publishinghouse.dto.PublishingHouseDTO;
 import java.util.Date;
 
 /**
- * Created by Bidzis on 7/18/2017.
+ * Created by Bidzis on 7/17/2017.
  */
-public class BookDTO extends BaseDTO {
+public class BookDTOCreate extends BaseDTO{
 
     private String title;
 
@@ -17,20 +17,20 @@ public class BookDTO extends BaseDTO {
 
     private double price;
 
-    private AuthorDTO author;
+    private Long authorId;
 
-    private PublishingHouseDTO publishingHouse;
+    private Long publishingHouseId;
 
-    public BookDTO() {
+    public BookDTOCreate() {
     }
 
-    public BookDTO(Long id, Date techDate, String title, Date realaseDate, double price, AuthorDTO author, PublishingHouseDTO publishingHouse) {
+    public BookDTOCreate(Long id, Date techDate, String title, Date realaseDate, double price, Long authorId, Long publishingHouseId) {
         super(id, techDate);
         this.title = title;
         this.realaseDate = realaseDate;
         this.price = price;
-        this.author = author;
-        this.publishingHouse = publishingHouse;
+        this.authorId = authorId;
+        this.publishingHouseId = publishingHouseId;
     }
 
     public String getTitle() {
@@ -57,19 +57,19 @@ public class BookDTO extends BaseDTO {
         this.price = price;
     }
 
-    public AuthorDTO getAuthor() {
-        return author;
+    public Long getAuthorId() {
+        return authorId;
     }
 
-    public void setAuthor(AuthorDTO author) {
-        this.author = author;
+    public void setAuthorId(Long authorId) {
+        this.authorId = authorId;
     }
 
-    public PublishingHouseDTO getPublishingHouse() {
-        return publishingHouse;
+    public Long getPublishingHouseId() {
+        return publishingHouseId;
     }
 
-    public void setPublishingHouse(PublishingHouseDTO publishingHouse) {
-        this.publishingHouse = publishingHouse;
+    public void setPublishingHouseId(Long publishingHouseId) {
+        this.publishingHouseId = publishingHouseId;
     }
 }
